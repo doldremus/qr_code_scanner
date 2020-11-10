@@ -110,7 +110,7 @@ class QRViewController {
               final args = call.arguments as Map;
               _scanUpdateController.sink.add(Barcode(
                 code: args['code'],
-                codeBytes: args['codeBytes'],
+                rawBytes: args['rawBytes'],
                 format: args['format'],
                 imageBytes: args['imageBytes'],
                 resultPoints: args['resultPoints'],
@@ -152,16 +152,16 @@ class QRViewController {
 }
 
 class Barcode {
-  Barcode({@required this.code, this.codeBytes, this.format, this.imageBytes, this.resultPoints});
+  Barcode({@required this.code, this.rawBytes, this.format, this.imageBytes, this.resultPoints});
 
   final String code;
-  final List<int> codeBytes;
+  final List<int> rawBytes;
   final String format;
   final List<int> imageBytes;
   final List<dynamic> resultPoints;
 
   @override
   String toString() {
-    return 'Barcode{code: $code, codeBytes: $codeBytes, format: $format, imageBytes: $imageBytes, resultPoints: $resultPoints}';
+    return 'Barcode{code: $code, rawBytes: $rawBytes, format: $format, imageBytes: $imageBytes, resultPoints: $resultPoints}';
   }
 }

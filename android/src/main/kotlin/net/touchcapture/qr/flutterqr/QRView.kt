@@ -128,7 +128,7 @@ class QRView(private val registrar: PluginRegistry.Registrar, id: Int) :
                     override fun barcodeResult(result: BarcodeResult) {
                          channel.invokeMethod("onRecognizeQR", mapOf(
                                 "code" to result.text,
-                                "codeBytes" to result.rawBytes,
+                                "rawBytes" to result.rawBytes,
                                 "format" to result.barcodeFormat?.name,
                                 "imageBytes" to result.bitmap.toByteArray(),
                                 "resultPoints" to result.resultPoints.map{ point -> mapOf("x" to point.x, "y" to point.y) }
@@ -143,7 +143,7 @@ class QRView(private val registrar: PluginRegistry.Registrar, id: Int) :
 
     fun Bitmap.toByteArray():ByteArray{
         ByteArrayOutputStream().apply {
-            compress(Bitmap.CompressFormat.JPEG, 10, this)
+            compress(Bitmap.CompressFormat.JPEG, 60, this)
             return toByteArray()
         }
     }
