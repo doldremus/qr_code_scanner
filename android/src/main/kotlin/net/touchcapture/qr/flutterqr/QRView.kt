@@ -18,6 +18,8 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 import io.flutter.plugin.platform.PlatformView
+import java.io.ByteArrayOutputStream
+import android.graphics.Bitmap
 
 class QRView(private val registrar: PluginRegistry.Registrar, id: Int) :
         PlatformView,MethodChannel.MethodCallHandler {
@@ -124,13 +126,26 @@ class QRView(private val registrar: PluginRegistry.Registrar, id: Int) :
         barcode.decodeContinuous(
                 object : BarcodeCallback {
                     override fun barcodeResult(result: BarcodeResult) {
-                        channel.invokeMethod("onRecognizeQR", result.text)
+                         channel.invokeMethod("onRecognizeQR", mapOf(
+                                "code" to result.text,
+                                "codeBytes" to result.rawBytes,
+                                "format" to result.barcodeFormat?.name,
+                                "imageBytes" to result.bitmap.toByteArray(),
+                                "resultPoints" to result.resultPoints.map{ point -> mapOf("x" to point.x, "y" to point.y) }
+                        ))
                     }
 
                     override fun possibleResultPoints(resultPoints: List<ResultPoint>) {}
                 }
         )
         return barcode
+    }
+
+    fun Bitmap.toByteArray():ByteArray{
+        ByteArrayOutputStream().apply {
+            compress(Bitmap.CompressFormat.JPEG, 10, this)
+            return toByteArray()
+        }
     }
 
     override fun dispose() {

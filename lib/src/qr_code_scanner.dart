@@ -107,7 +107,14 @@ class QRViewController {
         switch (call.method) {
           case scanMethodCall:
             if (call.arguments != null) {
-              _scanUpdateController.sink.add(call.arguments.toString());
+              final args = call.arguments as Map;
+              _scanUpdateController.sink.add(Barcode(
+                code: args['code'],
+                codeBytes: args['codeBytes'],
+                format: args['format'],
+                imageBytes: args['imageBytes'],
+                resultPoints: args['resultPoints'],
+              ));
             }
         }
       },
@@ -118,10 +125,10 @@ class QRViewController {
 
   final MethodChannel _channel;
 
-  final StreamController<String> _scanUpdateController =
-      StreamController<String>();
+  final StreamController<Barcode> _scanUpdateController =
+      StreamController<Barcode>();
 
-  Stream<String> get scannedDataStream => _scanUpdateController.stream;
+  Stream<Barcode> get scannedDataStream => _scanUpdateController.stream;
 
   void flipCamera() {
     _channel.invokeMethod('flipCamera');
@@ -141,5 +148,20 @@ class QRViewController {
 
   void dispose() {
     _scanUpdateController.close();
+  }
+}
+
+class Barcode {
+  Barcode({@required this.code, this.codeBytes, this.format, this.imageBytes, this.resultPoints});
+
+  final String code;
+  final List<int> codeBytes;
+  final String format;
+  final List<int> imageBytes;
+  final List<dynamic> resultPoints;
+
+  @override
+  String toString() {
+    return 'Barcode{code: $code, codeBytes: $codeBytes, format: $format, imageBytes: $imageBytes, resultPoints: $resultPoints}';
   }
 }
