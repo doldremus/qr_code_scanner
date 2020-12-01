@@ -154,11 +154,11 @@ class QRViewController {
 class Barcode {
   Barcode({@required this.code, this.rawBytes, this.format, this.imageBytes, this.resultPoints});
 
-  final String code;
-  final List<int> rawBytes;
-  final String format;
-  final List<int> imageBytes;
-  final List<dynamic> resultPoints;
+  String code;
+  List<int> rawBytes;
+  String format;
+  List<int> imageBytes;
+  List<dynamic> resultPoints;
 
   @override
   String toString() {
